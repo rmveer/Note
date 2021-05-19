@@ -1,0 +1,36 @@
+----------------- Amazon Web Services Elastic Container Service [ECS AWS ] --------------------
+
+*Amazon Web Services is a cloud provider that offers a verity of services such as compute power,dtabase storage,
+content delivery and other resouraces to help businesses scle and grow.
+*AWS services can be used to create and deploy any applications in the cloud.
+*It provides the services over the internet(www).
+*With AWS you pay only for what you use.
+
+What is ECS?
+
+*It is a service of AWS where it manages Docker Containers.
+*AWS ECS is a container management service which can quickly launch, exit and manage Docker containers on a cluster.
+*And AWS ECS maintains the availability of the application and allows every user to scale containers when necessary.
+*With the help ECS appications will run on high avilable mode.Very less cases where applications goes down.
+
+*Schedules the placement of containers across your cluster.Two physical hosts join togeather called cluster.ECS will
+helps us to place containers, Where should be container place either in host1 or host2 that logic defined in ECS
+we can define that logic.
+(Lets take two containers want to interact heavylly you do want to place them in a different hosts[server] 
+you would place them in a one single host so that they can intract with each other that lgic define by us )
+*It is a scalable service which can be accessed through the AWS Management Console and software development kits(SDKs).
+
+*We can launch container serviceses and these containers through AWS management console and also we can launch through
+SDKs available from AWS, we can launch through Java, .Net ⁯NodeJ languages.
+
+* ECS also will also helps to migrte the application to cloud without changing the code.Like no need to worry about 
+changing the IPS Storage what are the parameter to include.
+
+ Then what is Docker?????
+
+	Docker is a tool to automate the deployment of an application as a lightweight container so that the 
+application can work effeciently in different environments.
+	Docker container is a lightweight package of software that consists of all the dependencies (code,frameworks,
+libraries,etc)
+
+

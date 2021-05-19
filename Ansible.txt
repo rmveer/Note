@@ -1,0 +1,258 @@
+Change Management==> 
+Change Request/Change Order==>
+CAB Team==> Change Advisory Board
+Why,Who,What Time,What are Istructions,If fail how to rollback,Approval
+Configuration Management==> It is all about implimenting the changes
+what is a change??==> Anything that you do on server after login to it ,,,, 
+it is create delete modify the file or directory,,,, Install upgrade Uninstall a software,,,,, restart stop start service
+Ansible is tool developed on Python and it must need Linux machine
+Remote server also needs to have python internally because ansible make use of python and runs instructions on remote machines
+it is using ssh protocal with 22 port to connect remote servers, here it will use username password or username sshkey
+Inventory file is a text file which contains the IP addresses group names of the remote machines where we need to impliment the changes
+Ansible gives us predefined "ansible modules" to implement any change on remote server
+ad-hoc commands==> single change or single instruction
+playbooks ==> series of changes 
+ansible modules==> these are the pice of codes given by ansible
+by defult inventory file will be in etc/ansible/host and we can also store anywhere in the ansible contrller machine
+ppa==> python package repositry
+after the installatuon of ansible file by defult we get ansible file and host inventroy file in the path
+etc/ansible/ansible.cfg
+etc/ansible/host
+in host inventory file groups are determined by [group name] elements
+we can enter the hostame or ip addresses
+a hostname or ip can be a member of multiple groups 
+hostname==> hostname of the machine
+hostname -i ==> ip of the machine
+hostname -f==> fully qualified domain name of a machine
+ansible --version
+ansible all -m ping -u devops --ask-pass
+ansible <group name> -m ping -u devops --ask-pass
+we can also do multple group at time
+ansible DEV,QA -m ping -u devops --ask-pass
+we can limit the particulr host name
+ansible dev,qa -m ping -u devops --ask-pass --limit node1 so that it will check the ping only with node1
+also can go with mutilple nodes as well by using limit
+ansible dev -m ping -u devops--ask-pass --limit node1,node2 ==> it will check for node1 and node2
+assume that am in home/veeresh folder and need to copy a file etc/ansible/hosts
+root@veer:/home.veeresh# cp /etc/ansible/hosts .  ==> .(dot indicates pwd)
+
+we can custmize the host inventory fil,, it is nothing but defult inventory will be in /etc/ansible/hostsbut we can move the hosts file to /home/veeresh and we can run commands
+but it will excute and it will give an error didn't found inventory its because in configuration file /etc/ansible/ansible.cfg defultlly mentioned as inventory =/etc/ansible/hosts so
+so that wecan add a parameter to excutethe command the parameter should be -i along with path of the inventory file
+
+ansible Qa -i /home/veeresh/hosts -m ping -u devops --ask-pass --limit node1,,, here also we can use --inventory insted of -i bothn are same
+
+and its not a mandatory to mention as hosts to invetory file we can also give any name and we can keep any where
+
+we can also have mutiple inventory file in a same ansible controller machine where single controller machine working for two different projects and its better to keep those 
+2 inventory in different path,,, we need to contious while using the inventory files so that we can have multiple inventory in a same ansible controller machine
+
+we can also able to use ansible for anyother networking devices as well insted of servers,, networking devices called router or swithes 
+
+till now we used ping where its an ansible module,,, we can use any ansible module,, for example to check diskspace of all the machines inside a invetory along with their hostname
+
+ansible QA -i /home/veeresh/myinventory -m shell -a "df -h / ; hostname" -u devops -k ==> here we have module SHELL because we dont have df module and by using SHELL
+we can able to run any shell commandand here we need to pass arrgument by -a ,,, intead of mentioning --ask-pass we can go for -k ,,, ; indicates another command 
+ 
+if same want to check on all the maxhines of inventory and defult inventory path we can go for 
+
+ansible all -m shell -a "df -h / ; hostename -i" -u devops -k ==> m stands for module -a arrgument -i to get ip of  the machines 
+
+
+we can also run script on remote machine when we have script in controller machine by module script but not by shell.
+if we have a script already with remote machine then we go for shell module
+
+A single action or single change we are doing with a comands fom controller to multiple remote machines called ad-hoc commands
+OR single instruction with single module 
+
+we have worrked on ping file copy shell modules and also we can have 3000+ ansible modules avilable to check that
+ansible-doc -l to get count ansible-doc -l | wc -l
+
+to know on a particular module or search on how many modules we have 
+ansible-doc -l | grep copy oe ansible-doc -l | grep aws or ansible-doc -l | grep gcp
+
+to check the documentation or detailed information we can go for 
+ansible-doc copy
+
+we can able to create a file by ad-hoc ansible all -m shell -a "touch /etc/ansible/virus.txt " -u devops -k 
+but its not fair to use alaways where we have a module by ansible file it can be used for create a fiel or directory
+ansible QA -i /home/veer/hosts -m -a "path=/tmp/development state=directory"-u devops -k
+the same for copy a file we have  copy command
+ansible QA -i /home/veeresh/hosts -m copy -a "src=tmp/development dest=/tmp" -u devops -k
+here while copying the source is alawsys a contrrler machine,,, if teh copying file not  present in the controller machine it will through the error
+
+Note: each an deverytime when we run the ansible commands it will featch the information about the all remote machines and then it will go further,, the gathered infrnmation
+will be stored in cache memory and it will also erase once activity done and it will not display on the CLI to us,,, its totally a background work
+to check this we can use setup module where it will give the information about remote machinecs
+ansible QA -i /home/veeresh/hosts -m setup -u devops -k --limit node1
+it willl display the information about remote machine node1 
+and also we can go for in detail about setup by command ansible-doc setup
++=====================+=====================+===================================+=====================+==================
+
+Playbook is a script with a set of instruction that we can perform on remote server we use yaml or yml file to write the playbook
+YAML=yaml ain't markup language its a human readable data serialization language in any yaml file we follow "key: value" pair no tags no special charectors here
+the very important to write a playbook is Indentation it refers spaces which should be in proper way try to aviod TAB key even its better to never use TAB where it will through 
+error the extension would be .yml or .yaml
+here we have 3 data structures 
+1.scalars ==> very stright forward key value pairs which holds different data type(string int float  boolean char), name: veer,, a: 5,,, b: 5.6,,, c: true
+2.directnory / map ==> it is a expaling the properties of a thing needed here we go for car example
+car:
+ name: bmw
+ colour: red
+ engine: desiel
+ model: 2021
+3.arry / list ==> a list can be anything whoch is having  number of items,,, items should alaways start from -
+ab.yml
+- bmw
+- kia
+- honda
+- toyota
+
+playbooks will have nasted where it will be list inside a dictionary,, dictionary insde a list
+example: here cars is a list which contains list of cars, inside the car we have dictonary which expains the properties of car,
+              under the car properties again we have a list of engines called 2L,3L,4L
+
+cars:
+  - bmw:
+       colour: red
+       model: 2021
+       engine:
+         - 2L
+         - 3L
+         - 4L
+  - audi
+  - kia
+======================+=============================+===============+============+=====
+to write a playbook we need to know about following things,,, 1.task 2.play 3.playbook
+
+task==> its is a change that we want to perform on remote server, to write the task we use pre-defined ansible modules to run a task
+play==> list of tasks we want to excute on list of servers (list of servers will get by inventory file)
+playbook==> list of plays
+
+- name: Play1
+  hosts: QA
+  tasks:
+    - name: task1
+      copy:
+         src: /tmp/veer.txt
+         dest: /tmp/veeresh
+         mode: '0777'
+    - name: task2
+      file:
+        path: /tmp/today
+        state: directory       
+- name: Play2
+  hosts: DEV
+  tasks:
+    - name: task1
+      copy:
+         src: /tmp/veeri.txt
+         dest: /tmp/veeresh
+         mode: '0777'
+    - name: task2
+      file:
+        path: /tmp/tomorrow
+        state: directory        
+
+to run a playbook command is
+ansible-playbook <playbook.yml> -u devops -k
+
+if the first tasks fail it willl not countinue and its stops there itself by defult if need to skip the failed task and need to countinue means we can do that also
+ the output will be
+Gater facts for mentioned group or all
+Task1 changed 
+Task2 Changed
+
+at the end Play recap we have with list of host or ip details with recpect to them tasks status
+10.1.8.1    ok=3     changed=2(2 tasks so 2 if 1 task it will be 1)  unreacble=0(if remote host unreachble)  failed=0(iftask failed) skipped=0(ifwe skipped ) rescued=0 ignored=0
+node1       ok=3     changed=2(2 tasks so 2 if 1 task it will be 1)  unreacble=0(if remote host unreachble)  failed=0(iftask failed) skipped=0(ifwe skipped ) rescued=0 ignored=0
+
+(Note may be:  ignore=> ignoring the failer and countine next tasks, skipped=> in a group if we skipped the particular host or ip or machine for the mentioned task,, rescued=??)
+
+ if its fail it will not show as changed or failed it will dispaly the error under the task
+
+when: ansible_distribution =="RedHat" is the defult veriable where we can use anytime and inventory_hostname and items are also defult variables
+
+become: yes or true will become the sudo root user so we are mentining
+
+by defult ansible will not generate any log if needed we must enable it in /etc/ansible/ansible.cfg,,, here /var/log/ansible.log have to uncomment and then it will generare the logs
+
+
+systemd is a ansible module it is used to enable and stsrt the boot up service menas when the system turns on or restart 
+autometically it will starts
+
+systemd: 
+  name: tomcat
+  state: started
+  enabled: yes
+
+we can define the variables inside the playbook if needed we can also pass those from command line while running the playbook.
+the command is
+
+ansible-playbook <playbook.yml> --extra-vars <variable>=<key> -u devops -k
+example:-
+
+vars:
+  abc: hi
+  bbc: hello
+
+
+debug:
+  var: abc
+
+debug: 
+  msg: "the value is {{bbc}}"
+
+debug: 
+  var: cbc
+
+here in variable i didnt defined the "cbc" variable but i used at task excution level so i need to pass cbc value while running the playbook
+
+ansible-playbook <playbook.yml> --extra-vars cbc=am veeresh -u devops -k
+
+By defult the ansible will not run the next task if the privious task fails,, if we want ignore the the errors and need to countinue next task we can 
+also do that but need to mention inside the playbook
+example:
+
+---
+- hosts: all
+  tasks:
+    - name: igrnoring the error
+      shell: hi                                    # here hi is not a shell command so that the task will fail,, even though it we has to print nnd task msg
+      ignore_errors: yes
+   - name: after the ignore
+     debug:
+        msg: Hi myself veeresh
+
+
+for mentioning the permission or giving the permission to a file or a directory we can go for 
+
+---
+- hosts: all
+  become: yes
+  user: ansible
+  tasks:
+    - name: creating a file and giving permission to the file
+      file: 
+      path: /tmp/new directory/textfile.txt
+      state: touch
+      mode: "0755"
+      recurse: yes      # recurse is because of recursvlly to give permission i.e just like mentioning -R in chmod,,, i.e chmod -R 755
+
+BY ansible vault we can encryt the yaml file so that it called ymal file security
+
+we have exsited yaml file with us to encrypt that
+
+ansible-vault encrypt <playbook.yml>
+
+by starting itself we have to work on encryptrd file or new encrypted yml file
+
+ansible-vault create <playbook,yml>
+
+to view we have ansible-vault view <playbook.yml>
+
+so that so many argument we have ==> create,, encrypt,, decrypt,, view,, edit,, encrypt_string,, rekey  
+
+
+
+

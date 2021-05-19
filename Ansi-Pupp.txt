@@ -1,0 +1,31 @@
+                         Ansible                                     |                                 Puppet
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Both are Configuration Management Tools
+-------------------------------------------------------------------------------------------------------------------------------------------------  
+Ansible developed based on Python                   |            Puppet developed based on Rubby
+Ansible is push based                                        |            Puppet is pull based
+Uses SSH protocal                                            |            Puppet uses SSL protocal
+Instlled machine called Ansible Controller           |            Puppet installed machine called as Puppet Master
+Installing machines call as Remote servers/hsosts |           Insatlling machines called Puppet Agent
+It is also called Agent less Architecture                |            It is also called Agent less Architecture 
+It is a library so it is not a Service                        |           Puppet is a Service so it should Upend running at bothMaster&Agent         
+No need of pre-allocation of any resources          |           Need to pre-allocate 2GB RAM at both Master&Agent
+For automation/Deployment we write playbook   |            For Automation/Deployment we write Manifest file
+Writing the playbook with ansible module            |            Writing manifest file we use puppet/rubby syntax pupprt resourses
+The extension is .yml .yaml                                 |            The extension is .pp
+Once the file ready need to run command& deplyment starts|Once the file is ready no need to run any command&agent will commuicate with master every 30 min and starts running
+By defult inventory file will be in /etc/ansible/hosts & we can use anywhere | By defult manifest must be kept in  
+                                                                       
+
+
+
+
+
+
+
+
+
+
+
+
+

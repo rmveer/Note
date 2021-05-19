@@ -1,0 +1,95 @@
+Overtime working with ansible a userr may create hundreads of plabooks, variables,templates, defults etc.
+
+Roles allow users to group this logic into an orgnized manner making reusability and sharing of ansible staructure easier.
+The role is machanism for breaking a complex playbook into multiple files,,
+It will provides a framework for fully independent or interdependent collections of variables, tasks, files, templates and modules
+Roles are defined using YAML files with a predeined directory structure 
+A role directory structure contains directories: defults,vaars,tasks,files,templates,meta,handlers
+These each directory must contain a main.yml file which contains relevant content.
+
+Here task is a madnatory dirctory where all the changes defined inside it and remaining are not much mandatory
+
+we can create these all by manually with help of command mkdir but we have a command ansible galaxy (used for creating a role) 
+which will give the predefined directoty structure.the command is 
+
+ansible-galaxy init <the any name we can give relaed to task or a project or the role which we r going to work/do>
+
+role
+testrole
+tasks ==> inside the tasks we can create n number of yml files which discribes the different different tasks
+                 (here i have 3 tasks 1st is create a file 2nd install a file 3rd is uninstall file so under tasks folder am going to create
+                    three yml files)
+1st one
+main.yml => here only need to mention the tasks not the where
+- name: Task1 
+  file: 
+   path: /tmp/today.txt
+   state: touch
+
+2nd one
+install.yml
+
+- name: task from install
+  file:
+    path: /tmp/today
+    state: touch
+
+3rd one
+uninstall.yml
+- name: from uninstall
+  file: 
+    path: /tmp/today
+    state: touch
+
+But till now we didn't mentioned where it should install means hosts we didn't mentioned so the hosts should mention just beside role folder must and should,,
+so cretae a yml file just beside role folder means role and upper or top level plabook both sould be in a same folder
+ 
+vi testingrole.yml
+- hosts: all or QA or DEV
+   become: yes
+   roles:
+     - testrole ## so under the role we have testrole folder where we defined the tasks and other folders so that sould be mention here to call the excution
+
+if we excute this now with command ansible-palybook testrole.yml it will only give the ouputfor main.yml tasks not of install and uninstall so that
+we need to call those tasks inside the main.yml then it will work so that we do below chnagesz by include_tasks
+vi main.yml
+
+- name: Task1 
+  file: 
+   path: /tmp/today.txt
+   state: touch
+
+- name: calling firstone installing 
+  include_tasks: install.yml
+
+- name: calling second one uinstalling
+  include_tasks: uninstal.yml
+
+for the excution same file with the condition also we can again do some changes by using when condition
+
+- name: task from main.yml Task1
+  file:
+    path: /tmp/today.txt
+    state: touch
+
+- name: calling firstone insatalling
+  include_tasks: insall.yml
+  when: useraction == "install"
+
+- name: calling second one uninstall
+  include_tasks: uninstall.yml
+  when: useraction == "uninstall"
+
+so that then pass the condition in command
+
+ansible-palybook testrole.yml --extra-vars useraction=install -u devops -k here instead of --extrs-vars useractio=install simplywe can mention -e useraction=install
+
+Now we can look on the various folders crreate dby the ansible-galaxy 
+
+defults:-- It conatins the variables for the role. Variables present in defult folder have the lowest priority so they are easy to override.
+vars:--      It conatins the variables for the role. Variables in var directory have higher priority tahn variables in defults directory. 
+tasks:--    It contains the main list of steps to be executed by the role.
+files:--     It contains files which we want to be  copied to the remote host.We don't need to specify a path of resources stored in the directory.
+templetes:-- It contains the file templete which supports modification from the role.We use the Jinja2 templeting language for creating templates.
+meta:-- It contains metadata of role like an author,support platforms,dependencies.
+handlers:-- It conatins handlers which can be invoked by "notify" directives and are associated with service.	

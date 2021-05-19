@@ -1,0 +1,21 @@
+Debug module
+this module prints statements during excution and can be useful for debugging the variables or expressions
+debug module accepts 3 parameters
+1.msg
+2.var
+3.verbosity
+
+
+to check the syntax of a playbook ansible-playbook <playbooknemw.yml>  --syntax-check
+defult varibales in Ansible---> inventory_hostname, items
+
+we can also mention ansible path inside the ansible playbook to get path which anible-playbook
+so that it will give the path /usr/bin/ansible-playbook
+
+instead of mentioning --- at starting of ansible playbook we can go for the path as
+#!/usr/bin/ansible-playbook
+
+and we should excute this playbook instead of i=using anible-playbook <playbook.yml> ,, ./<playbook.yml >
+Note: the yml file should have excute permission so that make confermation and if not give permission by sudo chmod -R +x <playbook.yml>
+
+

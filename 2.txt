@@ -1,0 +1,38 @@
+where u will store all your docker files 
+how u will trigger the job
+what will be the conatiner ip is static or dynamic and what about ports 
+Are using ECS?
+
+volume check inside a docker
+
+Inside file we have givem EXPOSE 8080 but while running container its -P means anyport ??why its so
+ENV ARG
+
+how to connect my docker container to S3 bucket
+
+https://notepad.pw/2uzse2sa---> 02-04-2021
+https://notepad.pw/2uzse2sa
+
+ARG:
+	ARG instructons defines a variables in Docker file that can be use building the image
+	ARG values are not available after the image built
+	In the running container you can't access the ARG variables
+	Once ARG variables is defined in the dockerfile, you can alaways override the values by passing command line
+	argument
+	If we need to pass 2 variables using CMD line then we need to use --build-arg two times
+	We can have multiple ARG instruction in a dockerfile
+	ARG is the only instruction that can precede the FROM instruction in the dockerfile (means we can put the ARG 
+	instruction before the FROM instaruction in a dockerfile).
+
+ENV
+	ENV is to provide defult values for our feature environment varibales inside the container
+	We can't change ENV variable using command line argument directly
+	If we need to change the ENV variable using CMD line thne we have to use ARG varibale in ENV variable
+	
+	
+https://raw.githubusercontent.com/lerndevops/microservices-demo/master/deploy/kubernetes/complete-demo.yaml
+tomcat
+auto scling will dicress the pods after load normal then what about data and what exaclly replicas
+how about the data which being used duration more load
+
+https://notepad.pw/bz7av22r
